@@ -1,0 +1,27 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "webp": "npx gulp webp",
+    "zip": "npx gulp zip"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "del": "^6.1.1",
+    "fs": "^0.0.1-security",
+    "gulp": "^4.0.2",
+    "gulp-changed": "^4.0.3",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-replace": "^1.1.4",
+    "gulp-webp": "^4.0.1",
+    "gulp-zip": "^5.1.0",
+    "imagemin-mozjpeg": "^9.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "imagemin-svgo": "^7.1.0"  
+  }
+}
