@@ -1,7 +1,7 @@
 ## ファイルの特徴
 - webp画像変換・zip圧縮用ファイル
 - `npx gulp webp`　コマンド入力でimagesフォルダに格納した画像をwebpに変換してdist-imagesフォルダ内に出力
-- `npx gulp zip`　コマンド入力でzipフォルダに格納したフォルダをwebpに変換してdist-zipフォルダ内に出力 ※zip化後のフォルダ名はgulpfile.jsの `const zipFailName`にて設定
+- `npx gulp zip`　コマンド入力でzipフォルダに格納したフォルダをzip圧縮してdist-zipフォルダ内に出力 ※zip化後のフォルダ名は_gulpフォルダ内のgulpfile.js `const zipFailName`にて設定
 
 ## ファイル構成  
 ∟ images ・・・webpに変換したい画像格納用  
