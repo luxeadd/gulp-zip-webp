@@ -11,7 +11,7 @@ const replace = require("gulp-replace"); // 文字列や正規表現による置
 const zip = require("gulp-zip");
 
 //zip変換後の名前を設定
-const zipFailName = "archive";
+const zipFailName = "smartLp";
 
 // 読み込み元
 const srcPath = {
@@ -60,7 +60,7 @@ const imgImagemin = () => {
         )
       )
       //変換前の拡張子での圧縮画像が必要な場合
-      // .pipe(dest(destPath.img))
+      .pipe(dest(destPath.img))
       .pipe(webp())
       .pipe(dest(destPath.img))
   );
