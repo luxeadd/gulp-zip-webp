@@ -1,6 +1,7 @@
 ## ファイルの特徴
 - webp画像変換・zip圧縮用ファイル
 - `npx gulp webp`　コマンド入力でimagesフォルダに格納した画像をwebpに変換してdist-imagesフォルダ内に出力
+- `npx gulp webpToPng`　コマンド入力でimagesフォルダに格納したwebp画像をpngに変換してdist-imagesフォルダ内に出力
 - `npx gulp zip`　コマンド入力でzipフォルダに格納したフォルダをzip圧縮してdist-zipフォルダ内に出力 ※zip化後のフォルダ名は_gulpフォルダ内のgulpfile.js `const zipFailName`にて設定
 
 ## ファイル構成  
@@ -37,6 +38,10 @@
 ### - webpへ画像変換
 - webpに変換したい画像をimagesへ格納（フォルダ階層があってもそのまま階層構造を維持したままwebpに変換されます）
 - `npx gulp webp`をターミナルに入力するとdist-imagesフォルダに画像が出力されます。（cd _gulpで_gulpフォルダ直下に移動している状態で行ってください）
+### - webpからpngへ画像変換
+- webpからpngへ変換したい画像をimagesへ格納（フォルダ階層があってもそのまま階層構造を維持したままpngに変換されます）
+- `npx gulp webpToPng`をターミナルに入力するとdist-imagesフォルダに画像が出力されます。（cd _gulpで_gulpフォルダ直下に移動している状態で行ってください）
+
 ### - zip圧縮
 - zip圧縮したいフォルダ、ファイルをzipへ格納
 - `npx gulp zip`をターミナルに入力するとdist-zipフォルダに画像が出力されます。（cd _gulpで_gulpフォルダ直下に移動している状態で行ってください）

@@ -20,6 +20,8 @@
     "gulp-replace": "^1.1.4",
     "gulp-webp": "^4.0.1",
     "gulp-zip": "^5.1.0",
+    "sharp": "^0.32.0",
+    "gulp-sharp-responsive": "^0.4.0",
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-pngquant": "^9.0.2",
     "imagemin-svgo": "^7.1.0"  

@@ -9,6 +9,8 @@ const webp = require("gulp-webp"); //webp変換
 const rename = require("gulp-rename"); //ファイル名変更
 const replace = require("gulp-replace"); // 文字列や正規表現による置換
 const zip = require("gulp-zip");
+const sharp = require("sharp"); // sharpモジュールをインポート
+const through2 = require("through2"); // through2モジュールを追加
 
 //zip変換後の名前を設定
 const zipFailName = "smartLp";
@@ -21,10 +23,10 @@ const srcZipPath = {
   zip: "../zip/**/*",
 };
 // 出力先
-let destPath  = {
+let destPath = {
   img: "../dist-images/",
 };
-let destZipPath  = {
+let destZipPath = {
   zip: "../dist-zip/",
 };
 
@@ -61,9 +63,33 @@ const imgImagemin = () => {
       )
       //変換前の拡張子での圧縮画像が必要な場合
       .pipe(dest(destPath.img))
-      .pipe(webp())
-      .pipe(dest(destPath.img))
+    // .pipe(webp())
+    // .pipe(dest(destPath.img))
   );
+};
+
+// webpからPNGへの変換タスク
+const webpToPng = () => {
+  return src(srcPath.img)
+    .pipe(
+      through2.obj(function (file, enc, cb) {
+        sharp(file.contents)
+          .png({
+            quality: 80, // 品質設定（1-100）
+            compressionLevel: 9, // 圧縮レベル（0-9、9が最大圧縮）
+            palette: true, // パレットベースの圧縮を使用
+            colors: 256, // パレットの色数
+          })
+          .toBuffer()
+          .then((buffer) => {
+            file.contents = buffer;
+            file.path = file.path.replace(".webp", ".png");
+            cb(null, file);
+          })
+          .catch((err) => cb(err));
+      })
+    )
+    .pipe(dest(destPath.img));
 };
 
 // ファイルの削除
@@ -95,3 +121,4 @@ const archive = () => {
 
 exports.webp = series(clean, imgImagemin);
 exports.zip = series(cleanZip, archive);
+exports.webpToPng = series(clean, webpToPng);
