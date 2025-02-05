@@ -63,8 +63,9 @@ const imgImagemin = () => {
       )
       //変換前の拡張子での圧縮画像が必要な場合
       .pipe(dest(destPath.img))
-    // .pipe(webp())
-    // .pipe(dest(destPath.img))
+      //webp変換
+    .pipe(webp())
+    .pipe(dest(destPath.img))
   );
 };
 
