@@ -111,7 +111,8 @@ const archive = () => {
   const yymmdd = year + month + day;
 
   return src(srcZipPath.zip)
-    .pipe(zip(`${zipFailName}_${yymmdd}.zip`))
+    // .pipe(zip(`${zipFailName}_${yymmdd}.zip`))
+    .pipe(zip(`${zipFailName}.zip`))
     .pipe(dest(destZipPath.zip));
 };
 
