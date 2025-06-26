@@ -11,9 +11,11 @@ const replace = require("gulp-replace"); // 文字列や正規表現による置
 const zip = require("gulp-zip");
 const sharp = require("sharp"); // sharpモジュールをインポート
 const through2 = require("through2"); // through2モジュールを追加
+const fs = require("fs");
+const path = require("path");
 
 //zip変換後の名前を設定
-const zipFailName = "smartLp";
+// const zipFailName = "smartLp";
 
 // 読み込み元
 const srcPath = {
@@ -64,8 +66,8 @@ const imgImagemin = () => {
       //変換前の拡張子での圧縮画像が必要な場合
       .pipe(dest(destPath.img))
       //webp変換
-    .pipe(webp())
-    .pipe(dest(destPath.img))
+      .pipe(webp())
+      .pipe(dest(destPath.img))
   );
 };
 
@@ -101,19 +103,32 @@ const cleanZip = () => {
   return del(destZipPath.zip, { force: true });
 };
 
-// ファイルの圧縮
-const archive = () => {
+// ファイルの圧縮（サブフォルダごとにzip化）
+const archive = (done) => {
   const now = new Date();
   const year = now.getFullYear().toString().slice(-2);
   const month = ("0" + (now.getMonth() + 1)).slice(-2);
   const day = now.getDate().toString().slice(-2);
-
   const yymmdd = year + month + day;
 
-  return src(srcZipPath.zip)
-    // .pipe(zip(`${zipFailName}_${yymmdd}.zip`))
-    .pipe(zip(`${zipFailName}.zip`))
-    .pipe(dest(destZipPath.zip));
+  const zipDir = path.resolve(__dirname, "../zip");
+  const folders = fs
+    .readdirSync(zipDir)
+    .filter((f) => fs.statSync(path.join(zipDir, f)).isDirectory());
+
+  if (folders.length === 0) {
+    done();
+    return;
+  }
+
+  const tasks = folders.map((folder) => {
+    return src(`../zip/${folder}/**/*`)
+      .pipe(zip(`${folder}_${yymmdd}.zip`))
+      .pipe(dest("../dist-zip/"));
+  });
+
+  // 複数のストリームをまとめて完了させる
+  return require("merge-stream")(...tasks);
 };
 
 // exports.default = series(
