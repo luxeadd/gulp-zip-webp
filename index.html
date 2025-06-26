@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>画像webp変換 & フォルダzip化ツール</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>画像webp変換 & フォルダzip化ツール</h1>
+  <div class="container">
+    <div class="drop-area" id="webpDrop">
+      <p>画像をドラッグ＆ドロップ<br>またはクリックして選択（webp変換）</p>
+      <input type="file" id="webpInput" accept="image/*" multiple hidden>
+    </div>
+    <div class="drop-area" id="zipDrop">
+      <p>フォルダをドラッグ＆ドロップ<br>またはクリックして選択（zip化）</p>
+      <input type="file" id="zipInput" webkitdirectory directory multiple hidden>
+    </div>
+  </div>
+  <div id="message"></div>
+  <script src="script.js"></script>
+</body>
+
+</html>
+
+<style>
+  body {
+    font-family: 'Segoe UI', 'Meiryo', sans-serif;
+    background: #f7f7f7;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  h1 {
+    margin-top: 30px;
+    color: #333;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+  }
+
+  .drop-area {
+    width: 320px;
+    height: 200px;
+    border: 2px dashed #4caf50;
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    transition: border-color 0.3s, background 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .drop-area.dragover {
+    border-color: #2196f3;
+    background: #e3f2fd;
+  }
+
+  .drop-area p {
+    color: #666;
+    font-size: 1.1em;
+  }
+
+  #message {
+    margin-top: 30px;
+    color: #2196f3;
+    font-size: 1.1em;
+  }
+</style>
+
+<script>
+  // ドラッグ＆ドロップ共通処理
+  function setupDropArea(dropArea, input, onFiles) {
+    dropArea.addEventListener('click', () => input.click());
+    dropArea.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropArea.classList.add('dragover');
+    });
+    dropArea.addEventListener('dragleave', e => {
+      e.preventDefault();
+      dropArea.classList.remove('dragover');
+    });
+    dropArea.addEventListener('drop', e => {
+      e.preventDefault();
+      dropArea.classList.remove('dragover');
+      onFiles(e.dataTransfer.files);
+    });
+    input.addEventListener('change', e => {
+      onFiles(e.target.files);
+    });
+  }
+
+  const webpDrop = document.getElementById('webpDrop');
+  const webpInput = document.getElementById('webpInput');
+  const zipDrop = document.getElementById('zipDrop');
+  const zipInput = document.getElementById('zipInput');
+  const message = document.getElementById('message');
+
+  // 画像→webp変換（サーバーAPIに送信）
+  setupDropArea(webpDrop, webpInput, async (files) => {
+    message.textContent = "webp変換中...";
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append('files', file, file.name);
+    }
+    const res = await fetch('/api/webp', {
+      method: 'POST',
+      body: formData
+    });
+    message.textContent = await res.text();
+  });
+
+  // フォルダ→zip化（サーバーAPIに送信）
+  setupDropArea(zipDrop, zipInput, async (files) => {
+    message.textContent = "zip化中...";
+    const formData = new FormData();
+    for (const file of files) {
+      // webkitRelativePathでフォルダ構造を維持
+      formData.append('files', file, file.webkitRelativePath || file.name);
+    }
+    const res = await fetch('/api/zip', {
+      method: 'POST',
+      body: formData
+    });
+    message.textContent = await res.text();
+  });
+</script>
