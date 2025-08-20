@@ -123,7 +123,8 @@ const archive = (done) => {
 
   const tasks = folders.map((folder) => {
     return src(`../zip/${folder}/**/*`)
-      .pipe(zip(`${folder}_${yymmdd}.zip`))
+      // .pipe(zip(`${folder}_${yymmdd}.zip`))
+      .pipe(zip(`${folder}.zip`))
       .pipe(dest("../dist-zip/"));
   });
 
